@@ -5,6 +5,8 @@ import User from "./model/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { verify } from "auth.js";
+import Video from "./model/Video.js";
+import videoRoute from "./routes/videoRoutes.js"
 
 dotenv.config();
 const app = express();
@@ -62,6 +64,8 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 });
+
+app.use("/api",videoRoute);
 
 app.listen(PORT, () => {
   console.log("server is running");
