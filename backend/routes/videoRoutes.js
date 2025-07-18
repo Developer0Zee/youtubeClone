@@ -10,11 +10,11 @@ router.post("/videos", verify, async (req, res) => {
   const uploader = req.user.userId;
   const uploadDate = Date.now();
 
-  if (!title || thumbnailUrl || videoUrl || description || channelId)
+  if (!title || !thumbnailUrl || !videoUrl || !description || !channelId)
     return res.status(400).json({ message: "All fields are required" });
 
   try {
-    const newVideo = Video.create({
+    const newVideo = await Video.create({
       title: title,
       thumbnailUrl: thumbnailUrl,
       videoUrl: videoUrl,
@@ -90,7 +90,7 @@ try{
   const deleteVideo=await Video.findByIdAndDelete(req.params.id);
 
   if(!deleteVideo) return res.status(404).json({message:"Video not found"});
-  res.status(204)
+  res.status(204).send();
 }
 catch(err){
 
