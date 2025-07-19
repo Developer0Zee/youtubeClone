@@ -4,9 +4,10 @@ import dotenv from "dotenv";
 import User from "./model/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { verify } from "auth.js";
-import Video from "./model/Video.js";
-import videoRoute from "./routes/videoRoutes.js"
+import  {verify}  from "./middlewares/auth.js";
+import channelRoutes from "./routes/channelRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js" 
+import videoRoutes from "./routes/videoRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -57,7 +58,11 @@ app.post("/login", async (req, res) => {
 
     if (!isMatch) return res.status(403).json({ message: "Unathourised" });
 
-    const token = jwt.sign({ user: user._id }, seckretKey, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { user: { id: user._id, name: user.name } },
+      seckretKey,
+      { expiresIn: "1h" }
+    );
 
     res.status(200).json(token);
   } catch (error) {
@@ -65,7 +70,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.use("/api",videoRoute);
+app.use("/api", videoRoutes);
+app.use("/api",channelRoutes);
+app.use("api",commentRoutes);
 
 app.listen(PORT, () => {
   console.log("server is running");

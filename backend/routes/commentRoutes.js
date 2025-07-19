@@ -1,5 +1,6 @@
 import express from "express";
 import Comment from "../model/Comment";
+import { verify } from "../middlewares/auth";
 
 const router = express.Router();
 
@@ -27,11 +28,11 @@ router.post("/comments", verify, async (req, res) => {
   }
 });
 
-router("/comments/:videoId", async (req, res) => {
+router.get("/comments/:videoId", async (req, res) => {
   const { videoId } = req.params;
 
   try {
-    const allComment = await Comment.findbyId({ videoId })
+    const allComment = await Comment.find({ videoId })
       .populate("userId", "name")
       .sort({ timeStamp: -1 });
     if (!allComment || allComment.length === 0) {
@@ -44,14 +45,14 @@ router("/comments/:videoId", async (req, res) => {
   }
 });
 
-router.delete("/comments/:id", async (req, res) => {
+router.delete("/comments/:id", verify,async (req, res) => {
   const { commentId } = req.params.id;
   try {
     const deleteComment = Comment.findById(commentId);
     if (!deleteComment)
       return res.status(404).json({ message: "Comment not found" });
 
-    if (Comment.userId.toString() !== req.user) {
+    if (Comment.userId.toString() !== req.user.id) {
       return res
         .status(403)
         .json({ message: "Unauthorized to delete comment" });

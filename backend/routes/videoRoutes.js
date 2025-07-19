@@ -1,11 +1,10 @@
 import express from "express";
-import mongoose from "mongoose";
 import Video from "../model/Video";
 import { verify } from "./middlewares/auth";
 
 const router = express.Router();
 
-router.post("/videos", verify, async (req, res) => {
+router.post("/videos", async (req, res) => {
   const { title, thumbnailUrl, videoUrl, description, channelId } = req.body;
   const uploader = req.user.userId;
   const uploadDate = Date.now();
@@ -33,7 +32,7 @@ router.post("/videos", verify, async (req, res) => {
   }
 });
 
-router.get("/videos", verify, async (req, res) => {
+router.get("/videos", async (req, res) => {
   try {
     const videos = await Video.find()
       .populate("uploader", "name")
@@ -47,7 +46,7 @@ router.get("/videos", verify, async (req, res) => {
   }
 });
 
-router.get("/videos/:id", verify, async (req, res) => {
+router.get("/videos/:id", async (req, res) => {
   try {
     const specificVideo = await Video.findById(req.params.id);
     if (!specificVideo)
@@ -84,65 +83,59 @@ router.put("/videos/:id", verify, async (req, res) => {
   }
 });
 
-router.delete("/videos/:id",async (req,res)=>{
+router.delete("/videos/:id", verify, async (req, res) => {
+  try {
+    const deleteVideo = await Video.findByIdAndDelete(req.params.id);
 
-try{
-  const deleteVideo=await Video.findByIdAndDelete(req.params.id);
-
-  if(!deleteVideo) return res.status(404).json({message:"Video not found"});
-  res.status(204).send();
-}
-catch(err){
-
-  console.log("the error is ", err);
-res.status(404).json({message:"video not found"});
-}
+    if (!deleteVideo)
+      return res.status(404).json({ message: "Video not found" });
+    res.status(204).send();
+  } catch (err) {
+    console.log("the error is ", err);
+    res.status(404).json({ message: "video not found" });
+  }
 });
 
 //search functionality
 
-router.get("videos/search",async (req,res)=>{
-
-  const{title}=req.query;
+router.get("/videos/search", async (req, res) => {
+  const { title } = req.query;
 
   if (!title) {
     return res.status(400).json({ message: "Search title is required" });
   }
 
-  try{
-    const searchedVideo=await Video.find({
-      title:{$regex :title,$options:"i"}
+  try {
+    const searchedVideo = await Video.find({
+      title: { $regex: title, $options: "i" },
     });
 
-    if(searchedVideo.length===0){
-      res.status(404).json({message:"video not found"});
+    if (searchedVideo.length === 0) {
+      res.status(404).json({ message: "video not found" });
     }
 
-    res.status(200).json({message:"Found", searchedVideo});
+    res.status(200).json({ message: "Found", searchedVideo });
+  } catch (error) {
+    console.log("the error is ", error);
+    res.status(404).json({ message: "Video not found" });
   }
-  catch(error){
-    console.log("the error is ",error);
-    res.status(404).json({message:"Video not found"});
-  }
-
 });
 
-router.get("videos/category/:category",(req,res)=>{
+router.get("videos/category/:category", (req, res) => {
+  const { category } = req.params.id;
 
-const{category}=req.params.id;
-if(!category) return res.status(400).json({message:"bad request"});
+  try {
+    const videos = Video.findById({ category });
+    if (!videos || videos.length === 0)
+      return res
+        .status(404)
+        .json({ message: "No videos found in this category" });
 
-try{
+    res.status(200).json(videos);
+  } catch (err) {
+    console.log("the error is ", err);
 
-  const category= Video.findById({category});
-  if(!category) return res.status(404).json({message:"unable to search"});
-  res.status(200).json({message:"Videos are "},category);
-
-}catch(err){
-      console.log("the error is ",err);
-
-  res.status(500).json({message:"Unable to search"})
-}
-
-})
+    res.status(500).json({ message: "Unable to search" });
+  }
+});
 export default router;
