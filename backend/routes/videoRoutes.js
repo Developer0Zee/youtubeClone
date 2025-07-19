@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import Video from "./model/Video.js";
+import Video from "../model/Video";
 import { verify } from "./middlewares/auth";
 
 const router = express.Router();
@@ -98,4 +98,51 @@ catch(err){
 res.status(404).json({message:"video not found"});
 }
 });
+
+//search functionality
+
+router.get("videos/search",async (req,res)=>{
+
+  const{title}=req.query;
+
+  if (!title) {
+    return res.status(400).json({ message: "Search title is required" });
+  }
+
+  try{
+    const searchedVideo=await Video.find({
+      title:{$regex :title,$options:"i"}
+    });
+
+    if(searchedVideo.length===0){
+      res.status(404).json({message:"video not found"});
+    }
+
+    res.status(200).json({message:"Found", searchedVideo});
+  }
+  catch(error){
+    console.log("the error is ",error);
+    res.status(404).json({message:"Video not found"});
+  }
+
+});
+
+router.get("videos/category/:category",(req,res)=>{
+
+const{category}=req.params.id;
+if(!category) return res.status(400).json({message:"bad request"});
+
+try{
+
+  const category= Video.findById({category});
+  if(!category) return res.status(404).json({message:"unable to search"});
+  res.status(200).json({message:"Videos are "},category);
+
+}catch(err){
+      console.log("the error is ",err);
+
+  res.status(500).json({message:"Unable to search"})
+}
+
+})
 export default router;
