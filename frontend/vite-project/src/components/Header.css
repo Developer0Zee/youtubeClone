@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  background-color: black;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+.headerContainer {
+  background-color: black;
+  margin: 0;
+}
+.mainUl {
+  margin: 0;
+}
+
+ul li h1 {
+  color: white;
+}
+.headerContainer ul {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 8px;
+}
+
+.secondPart input[type="text"] {
+  width: 500px;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+  height: 40px;
+  background-color: black;
+  border: 1px solid #ffffff14;
+}
+input::placeholder {
+  padding-left: 10px;
+  font-size: 15px;
+  padding-top:5px;
+}
+input[type="text"]:focus {
+    border: 1px solid blue;
+    outline: none;
+    width: 600px;
+    color: white;
+    padding-left:0px;
+    font-size: medium;
+    font-weight: 600;
+}
+.searchButton {
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  height: 45.8px;
+  width: 80px;
+  position: relative;
+  top: 6.2px;
+  padding: 0px;
+  background-color: #ffffff14;
+  border: 1px solid #ffffff14;
+  color:#aaaaaa
+}
+.mainIcon {
+  color: #007bff; /* Bootstrap blue */
+  font-size: 20px;
+}
