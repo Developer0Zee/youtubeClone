@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.filterBar {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+  background-color: #0f0f0f;
+  margin: 0;
+}
+
+.filter {
+  display: flex;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+  margin: 0;
+}
+
+.filter li {
+  background-color: #272727;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter li:hover {
+  background-color: white;
+  color: black;
+}
