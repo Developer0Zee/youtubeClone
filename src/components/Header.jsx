@@ -1,11 +1,13 @@
 import "./Header.css";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Header(props) {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
     <>
+    <header className="header">
       <div className="headerContainer">
         <ul className="mainUl">
           {/* Left Section */}
@@ -59,8 +61,9 @@ function Header(props) {
           </li>
         </ul>
       </div>
-
+</header>
     </>
+    
   );
 }
 

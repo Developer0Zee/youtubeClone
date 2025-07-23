@@ -40,13 +40,15 @@ function SideBar(props) {
   );
 
   return (
-    <div className={`sidebar ${isExpanded ? "expanded" : "collapsed"}`}>
+
+    <aside className={`sidebar ${isExpanded ? "expanded" : "collapsed"}`}>
       <ul>
         {renderSection(mainItems)}
         {renderSection(youItems, "You")}
         {renderSection(exploreItems, "Explore")}
       </ul>
-    </div>
+    </aside>
+
   );
 }
 

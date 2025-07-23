@@ -1,0 +1,77 @@
+.channelPageContainer {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+.channelBanner {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.channelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.channelInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.channelAvatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.channelMeta h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.channelMeta p {
+  margin: 3px 0 0;
+  color: gray;
+  font-size: 14px;
+}
+
+.subscribeBtn {
+  background-color: red;
+  color: white;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.videoSectionTitle {
+  margin: 30px 0 15px;
+  font-size: 20px;
+}
+
+.channelVideos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.channelVideoCard {
+  cursor: pointer;
+}
+
+.channelVideoCard img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.videoTitle {
+  margin-top: 8px;
+  font-weight: 500;
+}

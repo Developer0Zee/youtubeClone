@@ -1,19 +1,25 @@
-import "./Filter.css"
-function FilterBar(){
+import "./Filter.css";
 
-    return (
-        <div className="filterBar">
-<ul className="filter">
-    <li>All</li>
-    <li>Music</li>
-    <li>Trending</li>
-    <li>Gaming</li>
-    <li>Shopping</li>
-    <li>Study</li>
-    <li>News</li>
-</ul>
-        </div>
-    )
+function FilterBar({ isExpanded }) {
+  const filters = [
+    "All", "Music", "Gaming", "News", "Live", "Recently uploaded", 
+    "Watched", "New to you", "Trending", "Cooking", "Podcasts"
+  ];
+
+  return (
+    <div className={`filter-bar ${isExpanded ? "expanded" : ""}`}>
+      <div className="filter-scroll-container">
+        {filters.map((filter, index) => (
+          <button 
+            key={index}
+            className={`filter-item ${index === 0 ? "active" : ""}`}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default FilterBar;
