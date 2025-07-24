@@ -1,14 +1,24 @@
 import { useState } from "react";
+import API from "../api"
 
-import "./Auth.css"
+import "./Auth.css";
 function LoginPage() {
   const [email, setEmail] = useState(" ");
   const [password, setPassword] = useState(" ");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    console.log("Logging in with", { email, password });
+    try {
+    const response = await API.post('/login', { email, password });
+    localStorage.setItem('token', response.data);
+    // Redirect to home page or fetch user data
+    window.location.href = '/';
+  } catch (error) {
+    console.error("Login failed:", error.response?.data?.message || error.message);
+    alert(error.response?.data?.message || "Login failed");
+  }
+};
   };
   return (
     <div className="authContainer">
