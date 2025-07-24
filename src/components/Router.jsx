@@ -5,6 +5,8 @@ import VideoPage from "../components/Pages/VideoPages";
 import ChannelPage from "./Pages/ChannelPage";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,7 +22,12 @@ const router = createBrowserRouter([
       },
       {
         path: "channel/:id",
-        element: <ChannelPage />,
+
+        element: (
+          <ProtectedRoute>
+            <ChannelPage />,
+          </ProtectedRoute>
+        ),
       },
       {
         path: "login",

@@ -1,30 +1,30 @@
-import { useParams } from "react-router-dom";
-import "./Channel.css"; 
-
-const dummyChannel = {
-  id: "channel123",
-  name: "CodeWithZee",
-  avatar: "https://via.placeholder.com/80",
-  subscribers: "450K",
-  banner: "https://via.placeholder.com/1200x300",
-  videos: [
-    {
-      _id: "abc1",
-      title: "Intro to React",
-      thumbnail: "https://via.placeholder.com/320x180",
-    },
-    {
-      _id: "abc2",
-      title: "MongoDB in 15 mins",
-      thumbnail: "https://via.placeholder.com/320x180",
-    },
-  ],
-};
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import API from '../api';
+import './Channel.css';
 
 function ChannelPage() {
   const { id } = useParams();
-  const channel = dummyChannel;
+  const [channel, setChannel] = useState(null);
+  const [videos, setVideos] = useState([]);
 
+  useEffect(() => {
+    const fetchChannelData = async () => {
+      try {
+        const channelRes = await API.get(`/channel/${id}`);
+        const videosRes = await API.get('/videos', {
+          params: { channelId: id }
+        });
+        setChannel(channelRes.data);
+        setVideos(videosRes.data);
+      } catch (error) {
+        console.error("Failed to fetch channel data:", error);
+      }
+    };
+    fetchChannelData();
+  }, [id]);
+
+  if (!channel) return <div>Loading channel...</div>;
   return (
     <div className="channelPageContainer">
       <img src={channel.banner} className="channelBanner" alt="banner" />

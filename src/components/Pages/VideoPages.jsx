@@ -1,38 +1,66 @@
-import { useParams } from "react-router-dom";
-import "./VideoPages.css"
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import API from '../api';
+import './VideoPages.css';
 
 function VideoPage() {
   const { id } = useParams();
+  const [video, setVideo] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+
+  useEffect(() => {
+    const fetchVideoData = async () => {
+      try {
+        const [videoRes, commentsRes] = await Promise.all([
+          API.get(`/videos/${id}`),
+          API.get(`/comments/${id}`)
+        ]);
+        setVideo(videoRes.data);
+        setComments(commentsRes.data);
+      } catch (error) {
+        console.error("Failed to fetch video data:", error);
+      }
+    };
+    fetchVideoData();
+  }, [id]);
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await API.post('/comments', {
+        text: newComment,
+        videoId: id
+      });
+      setComments([response.data, ...comments]);
+      setNewComment('');
+    } catch (error) {
+      console.error("Failed to post comment:", error);
+    }
+  };
+
+  if (!video) return <div>Loading video...</div>;
 
   return (
     <div className="video-page">
-      <div className="video-player">
-        <iframe
-          src={`https://www.youtube.com/embed/${id}`}
-          title="Video Player"
-          allowFullScreen
-        />
-      </div>
-
-      <div className="video-info">
-        <h2>Awesome Video Title Here</h2>
-
-        <div className="video-meta">
-          <div className="channel-info">
-            <img src="https://via.placeholder.com/40" alt="Channel Avatar" />
-            <div>
-              <p><strong>Channel Name</strong></p>
-              <p>1.2M subscribers</p>
+      {/* ... existing JSX ... */}
+      <div className="comments-section">
+        <h3>Comments</h3>
+        <form onSubmit={handleCommentSubmit}>
+          <input
+            type="text"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Add a comment..."
+          />
+          <button type="submit">Post</button>
+        </form>
+        <div className="comments-list">
+          {comments.map(comment => (
+            <div key={comment._id} className="comment">
+              <p><strong>{comment.userId?.name}</strong>: {comment.text}</p>
             </div>
-            <button className="subscribe-btn">Subscribe</button>
-          </div>
-          <div>123K views • 2 days ago</div>
-        </div>
-
-        <div className="description-box">
-          <p>
-            This is the video description. It includes details, hashtags, links, etc.
-          </p>
+          ))}
         </div>
       </div>
     </div>
